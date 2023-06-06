@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route } from 'react-router-dom'
+import * as yup from 'yup'
 import axios from 'axios'
 import Home from "./Home"
 import PizzaForm from "./PizzaForm"
@@ -13,7 +14,7 @@ const App = () => {
     mushrooms: false,
     spinach: false,
     sausage: false,
-    special: ""
+    special: "---- Select a Size ----"
   }
 
   const initialFormErrors = {
@@ -22,6 +23,13 @@ const App = () => {
   }
 
   const initialOrders = []
+
+  const schema = yup.object().shape({
+    name: yup
+      .string()
+      .required("name must be at least 2 characters")
+      .min(2, "name must be at least 2 characters") 
+  })
 
   const [formValues, setFormValues] = useState(initialFormValues)
   const [formErrors, setFormErrors] = useState(initialFormErrors)
@@ -40,15 +48,24 @@ const App = () => {
       })
   }
   
+  const validate = (name, value) => {
+    yup.reach(schema, name)
+      .validate(value)
+      .then(() => setFormErrors({ ...formErrors, [name]: "" }))
+      .catch(err => setFormErrors({ ...formErrors, [name]: err.errors[0] }))
+  }
 
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route 
-        path="pizza" 
+        path="/pizza" 
         element={<PizzaForm 
           values={formValues} 
-          errors={formErrors}/>} />
+          errors={formErrors}
+          // submit={formSubmit}
+          // change={inputChange}
+          />} />
     </Routes>
   );
 };

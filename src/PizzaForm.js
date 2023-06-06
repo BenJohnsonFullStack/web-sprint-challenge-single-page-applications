@@ -1,14 +1,16 @@
 import React from 'react'
 
-export default function PizzaForm() {
+export default function PizzaForm(props) {
+    const { values, errors } = props
+
     return(
         <form id="pizza-form">
             <input
                 id="name-input"
-                name="nameInput"
+                name="name"
                 type="text"
                 placeholder="Name"
-                value={form.value}
+                value={values.name}
             />
             <select id="size-dropdown">
                 <option>---- Select a Size ----</option>
@@ -20,36 +22,36 @@ export default function PizzaForm() {
             <input 
                 name="pepperoni"
                 type="checkbox"
-                checked={form.value === true}
+                checked={values.pepperoni === true}
             /> 
             </label>
             <label>Mushrooms
             <input 
                 name="mushrooms"
                 type="checkbox"
-                checked={form.value === true}
+                checked={values.mushrooms === true}
             /> 
             </label>
             <label>Spinach
             <input 
                 name="spinach"
                 type="checkbox"
-                checked={form.value === true}
+                checked={values.spinach === true}
             /> 
             </label>
             <label>Sausage
             <input 
                 name="sausage"
                 type="checkbox"
-                checked={form.value === true}
+                checked={values.sausage === true}
             /> 
             </label>
             <input
                 id="special-text"
-                name="specialText"
+                name="special"
                 type="text"
                 placeholder="Special Instructions"
-                value={form.value}
+                value={values.special}
             />
             <button id="order-button">Add to Order</button>
         </form>
