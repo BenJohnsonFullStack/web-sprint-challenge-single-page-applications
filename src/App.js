@@ -14,7 +14,7 @@ const App = () => {
     mushrooms: false,
     spinach: false,
     sausage: false,
-    special: "---- Select a Size ----"
+    special: ""
   }
 
   const initialFormErrors = {
@@ -28,7 +28,19 @@ const App = () => {
     name: yup
       .string()
       .required("name must be at least 2 characters")
-      .min(2, "name must be at least 2 characters") 
+      .min(2, "name must be at least 2 characters"),
+    size: yup
+      .string(),
+    pepperoni: yup
+      .bool(),
+    mushrooms: yup
+      .bool(),
+    spinach: yup
+      .bool(),
+    sausage: yup
+      .bool(),
+    special: yup
+      .string()
   })
 
   const [formValues, setFormValues] = useState(initialFormValues)
@@ -36,8 +48,9 @@ const App = () => {
   const [orders, setOrders] = useState(initialOrders)
 
   const postOrder = newOrder => {
-    axios.post("http://localhost:3000/pizza", newOrder)
+    axios.post("https://reqres.in/api/orders", newOrder)
       .then((res) => {
+        console.log(res)
         setOrders([res.data, ...orders])
       })
       .catch((err) => {
@@ -55,6 +68,24 @@ const App = () => {
       .catch(err => setFormErrors({ ...formErrors, [name]: err.errors[0] }))
   }
 
+  const inputChange = (name, value) => {
+    validate(name, value)
+    setFormValues({ ...formValues, [name]: value })
+  }
+
+  const formSubmit = () => {
+    const newOrder = {
+      name: formValues.name.trim(),
+      size: formValues.size,
+      pepperoni: formValues.pepperoni,
+      mushrooms: formValues.mushrooms,
+      spinach: formValues.spinach,
+      sausage: formValues.sausage,
+      special: formValues.special.trim()
+    }
+    postOrder(newOrder)
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -63,8 +94,8 @@ const App = () => {
         element={<PizzaForm 
           values={formValues} 
           errors={formErrors}
-          // submit={formSubmit}
-          // change={inputChange}
+          submit={formSubmit}
+          change={inputChange}
           />} />
     </Routes>
   );
