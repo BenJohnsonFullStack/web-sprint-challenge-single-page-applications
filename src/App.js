@@ -30,7 +30,7 @@ const App = () => {
   const postOrder = newOrder => {
     axios.post("http://localhost:3000/pizza", newOrder)
       .then((res) => {
-        setOrders(res.data)
+        setOrders([res.data, ...orders])
       })
       .catch((err) => {
         console.error(err)
@@ -44,7 +44,11 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="pizza" element={<PizzaForm />} />
+      <Route 
+        path="pizza" 
+        element={<PizzaForm 
+          values={formValues} 
+          errors={formErrors}/>} />
     </Routes>
   );
 };
